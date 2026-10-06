@@ -108,9 +108,13 @@ issue — so nobody reconstructs context, and nothing ships without a human sayi
 
 ## Community Android adaptation
 
-This is an **unofficial community adaptation** of Multica Mobile for Android 7.0+ (API 24+). The original project is [Multica (`multica-ai/multica`)](https://github.com/multica-ai/multica), copyright 2025–2026 Index Labs (Hong Kong) Limited.
+This is an **unofficial community adaptation** of [Multica](https://github.com/multica-ai/multica) Mobile (Android 7.0+ / API 24+). What we changed, and why:
 
-It adds per-environment Android package and adaptive-icon configuration, keeps native `ActionSheetIOS` on iOS, and provides Android menus for workspace/More navigation, Inbox, issue/project actions, and comment/chat long-press actions. Image selection uses the photo library; this adaptation does not add camera capture. Android-specific Markdown spacing keeps the final line of comments visible. For native-library compatibility, Expo `useLegacyPackaging` selects legacy compressed-library packaging to support SoLoader loading; an Expo config plugin pins `fbjni` to `0.7.0`, matching React Native `0.83.6`’s catalog and keeping JNI symbols aligned rather than letting `fbjni:+` float.
+- **Android menus instead of iOS-only sheets** — long-press actions on issues, projects, comments and chats, plus workspace switching and the "More" tab, previously depended on `ActionSheetIOS` and simply didn't respond on Android. We added an `action-sheet` abstraction that keeps the native sheet on iOS and renders Android-style menus elsewhere, so every list item is now actually operable on a phone.
+- **Per-environment app identity** — Android package name and adaptive icon can be set per build environment, so dev and release builds install side by side instead of overwriting each other.
+- **Fixes the comment bottom-line bug** — Android Markdown rendering clipped the last line of comments; spacing is now Android-aware and nothing gets cut off.
+- **Photo library for image selection** — picking images works through the system photo picker; we deliberately did not add camera capture.
+- **Stable native-library loading** — the app crashed at startup with `fbjni:+` resolving to an incompatible version. An Expo config plugin now pins `fbjni` to `0.7.0` (matching React Native 0.83.6's catalog) and enables legacy compressed-library packaging for SoLoader. Result: the app installs and launches reliably without root or special build flags.
 
 **APK:** [Download Android APK](https://github.com/lixin786/multica/releases/download/android-v0.1.0-fbjni-0.7.0/Multica-Android-v0.1.0-fbjni-0.7.0-aligned.apk) — debug-signed, not a Play Store package.
 

@@ -390,9 +390,13 @@ diff，全都挂在同一个任务下——没人需要重新捋一遍上下文�
 
 ## 社区 Android 适配
 
-这是面向 Android 7.0+（API 24+）的 Multica Mobile 非官方社区适配。原项目为 [Multica（`multica-ai/multica`）](https://github.com/multica-ai/multica)，版权所有者为 Index Labs (Hong Kong) Limited（2025–2026）。
+这是 [Multica](https://github.com/multica-ai/multica) Mobile 的非官方社区适配（Android 7.0+ / API 24+）。我们改了什么、解决了什么问题：
 
-适配为各环境增加 Android package 和 adaptive icon；iOS 保留原生 `ActionSheetIOS`，Android 则提供工作区/更多导航、收件箱、任务/项目操作及评论/聊天长按菜单。图片从相册选择，本适配不新增拍照功能。Android 版 Markdown 增加底部留白，避免评论末行被裁切。原生库兼容方面，Expo `useLegacyPackaging` 采用 legacy 压缩原生库布局以支持 SoLoader 加载；Expo 配置插件将 `fbjni` 固定为 React Native `0.83.6` 版本清单中的 `0.7.0`，对齐 JNI 符号并避免 `fbjni:+` 解析到任意版本。
+- **Android 菜单补全**——此前任务、项目、评论、聊天的长按操作，以及工作区切换和「更多」页，都依赖 `ActionSheetIOS`，在 Android 上点了没反应。我们加了一层 `action-sheet` 抽象：iOS 仍走原生 ActionSheet，Android 渲染原生风格的菜单，手机上每个列表项现在都能真正操作了。
+- **各环境独立的应用标识**——Android 包名和自适应图标可按构建环境配置，开发版和正式版可以并存安装，不再互相覆盖。
+- **修掉评论末行被裁切的问题**——Android 端 Markdown 渲染会把评论最后一行裁掉，现在对 Android 做了留白适配，内容不再缺失。
+- **图片选择走系统相册**——选图走系统照片选择器；我们没有加拍照功能，这是有意为之。
+- **原生库加载稳定化**——之前 `fbjni:+` 会解析到不兼容的版本导致启动即崩。现在用 Expo 配置插件把 `fbjni` 固定在 `0.7.0`（与 React Native 0.83.6 的依赖清单一致），并启用 legacy 压缩库布局以兼容 SoLoader。效果：APK 装上就能正常启动，无需 root 或特殊编译参数。
 
 **APK：** [下载 Android APK](https://github.com/lixin786/multica/releases/download/android-v0.1.0-fbjni-0.7.0/Multica-Android-v0.1.0-fbjni-0.7.0-aligned.apk)（Android Debug 签名，非 Play Store 发布包）。
 
