@@ -103,6 +103,21 @@ diff，全都挂在同一个任务下——没人需要重新捋一遍上下文�
 - **Web、[桌面端](https://multica.ai/docs/zh/desktop-app)、[移动端](https://multica.ai/docs/zh/mobile-app) →** macOS、Windows、Linux、iPhone、iPad，打开都是同一个工作区——iOS App 现在要自己从源码编译安装，还没上 App Store。
 - **[CLI 与 API](https://multica.ai/docs/zh/cli) →** 界面上能点的，CLI 和 API 里都能调。智能体操作 Multica，用的就是你那套 CLI。
 
+## 社区 Android 适配
+
+这是 [Multica](https://github.com/multica-ai/multica) Mobile 的非官方社区适配（Android 7.0+ / API 24+）。我们改了什么、解决了什么问题：
+
+- **Android 菜单补全**——此前任务、项目、评论、聊天的长按操作，以及工作区切换和「更多」页，都依赖 `ActionSheetIOS`，在 Android 上点了没反应。我们加了一层 `action-sheet` 抽象：iOS 仍走原生 ActionSheet，Android 渲染原生风格的菜单，手机上每个列表项现在都能真正操作了。
+- **各环境独立的应用标识**——Android 包名和自适应图标可按构建环境配置，开发版和正式版可以并存安装，不再互相覆盖。
+- **修掉评论末行被裁切的问题**——Android 端 Markdown 渲染会把评论最后一行裁掉，现在对 Android 做了留白适配，内容不再缺失。
+- **图片选择走系统相册**——选图走系统照片选择器；我们没有加拍照功能，这是有意为之。
+- **原生库加载稳定化**——之前 `fbjni:+` 会解析到不兼容的版本导致启动即崩。现在用 Expo 配置插件把 `fbjni` 固定在 `0.7.0`（与 React Native 0.83.6 的依赖清单一致），并启用 legacy 压缩库布局以兼容 SoLoader。效果：APK 装上就能正常启动，无需 root 或特殊编译参数。
+
+**APK：** [下载 Android APK](https://github.com/lixin786/multica/releases/download/android-v0.1.0-fbjni-0.7.0/Multica-Android-v0.1.0-fbjni-0.7.0-aligned.apk)（Android Debug 签名，非 Play Store 发布包）。
+
+**参考：** [Android 支持请求 #3864](https://github.com/multica-ai/multica/issues/3864) · [Inbox `ActionSheetIOS` 问题 #6215](https://github.com/multica-ai/multica/issues/6215) · [Expo Build Properties 文档](https://docs.expo.dev/versions/latest/sdk/build-properties/) · [React Native 0.83.6 依赖清单](https://github.com/facebook/react-native/blob/v0.83.6/packages/react-native/gradle/libs.versions.toml) · [Android NDK C++ 支持](https://developer.android.com/ndk/guides/cpp-support)。
+
+---
 ---
 
 ## 开始使用

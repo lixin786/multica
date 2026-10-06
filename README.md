@@ -106,6 +106,21 @@ issue — so nobody reconstructs context, and nothing ships without a human sayi
 - **Web, [desktop](https://multica.ai/docs/desktop-app), and [mobile](https://multica.ai/docs/mobile-app) →** The same workspace on macOS, Windows, Linux, iPhone, and iPad — the iOS app builds from source today, not yet on the App Store.
 - **[CLI and API](https://multica.ai/docs/cli) →** Every surface is scriptable. Agents drive Multica through the same CLI you do.
 
+## Community Android adaptation
+
+This is an **unofficial community adaptation** of [Multica](https://github.com/multica-ai/multica) Mobile (Android 7.0+ / API 24+). What we changed, and why:
+
+- **Android menus instead of iOS-only sheets** — long-press actions on issues, projects, comments and chats, plus workspace switching and the "More" tab, previously depended on `ActionSheetIOS` and simply didn't respond on Android. We added an `action-sheet` abstraction that keeps the native sheet on iOS and renders Android-style menus elsewhere, so every list item is now actually operable on a phone.
+- **Per-environment app identity** — Android package name and adaptive icon can be set per build environment, so dev and release builds install side by side instead of overwriting each other.
+- **Fixes the comment bottom-line bug** — Android Markdown rendering clipped the last line of comments; spacing is now Android-aware and nothing gets cut off.
+- **Photo library for image selection** — picking images works through the system photo picker; we deliberately did not add camera capture.
+- **Stable native-library loading** — the app crashed at startup with `fbjni:+` resolving to an incompatible version. An Expo config plugin now pins `fbjni` to `0.7.0` (matching React Native 0.83.6's catalog) and enables legacy compressed-library packaging for SoLoader. Result: the app installs and launches reliably without root or special build flags.
+
+**APK:** [Download Android APK](https://github.com/lixin786/multica/releases/download/android-v0.1.0-fbjni-0.7.0/Multica-Android-v0.1.0-fbjni-0.7.0-aligned.apk) — debug-signed, not a Play Store package.
+
+**References:** [Android support #3864](https://github.com/multica-ai/multica/issues/3864) · [Inbox `ActionSheetIOS` issue #6215](https://github.com/multica-ai/multica/issues/6215) · [Expo Build Properties](https://docs.expo.dev/versions/latest/sdk/build-properties/) · [React Native 0.83.6 dependency catalog](https://github.com/facebook/react-native/blob/v0.83.6/packages/react-native/gradle/libs.versions.toml) · [Android NDK C++ support](https://developer.android.com/ndk/guides/cpp-support).
+
+---
 ---
 
 ## Get started
